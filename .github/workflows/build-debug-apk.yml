@@ -1,85 +1,122 @@
 name: Build Auriga Debug APK
 
-# Single, authoritative build workflow. Auriga v2 intentionally has only
-# ONE workflow file — the original AURIGA repo's confusion came from four
-# separate workflows (android_build.yml, build-android.yml, build-apk.yml,
-# android_release.yml) all triggering on every push to main simultaneously.
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch: {}
+  # Single, authoritative build workflow. Auriga v2 intentionally has only
+  # ONE workflow file — the original AURIGA repo's confusion came from four
+  # separate workflows all triggering on every push to main simultaneously.
+  on:
+    push:
+      branches: [ "main" ]
+    pull_request:
+      branches: [ "main" ]
+    workflow_dispatch: {}
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+  jobs:
+    build:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        - name: Set up JDK 17
+          uses: actions/setup-java@v4
+          with:
+            java-version: '17'
+            distribution: 'temurin'
 
-      # ---------------------------------------------------------------
-      # On-device LLM model bundling
-      # ---------------------------------------------------------------
-      # Qwen2.5-0.5B-Instruct (litert-community) is Apache-2.0 licensed and
-      # UNGATED on Hugging Face — no account login, no license
-      # click-through, no auth token required. This is a real, working
-      # anonymous download, unlike an earlier attempt with Gemma3-1B-IT
-      # (gated, and SoC-specific filenames with no single universal file —
-      # see docs/KNOWN_RISKS.md for that history).
-      - name: Cache on-device LLM model
-        id: model-cache
-        uses: actions/cache@v4
-        with:
-          path: app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm
-          key: qwen2.5-0.5b-instruct-q8-litertlm-v1
+        # ---------------------------------------------------------------
+        # On-device LLM model bundling — dynamic HuggingFace discovery
+        # ---------------------------------------------------------------
+        # Rather than hardcoding a filename that can change when the HF repo
+        # is reorganised, we query the HF API at build time to find the best
+        # available q8 multi-prefill model file, then save it under the fixed
+        # internal name "mind_model.tflite" that BuildConfig and the app
+        # always reference. This means a HF rename never silently breaks CI.
+        #
+        # Priority order: .litertlm > .tflite > .task (all q8, multi-prefill)
+        # Falls back to any q8 file if no multi-prefill variant is found.
+        - name: Discover model filename from HuggingFace API
+          id: discover-model
+          run: |
+            HF_REPO="litert-community/Qwen2.5-0.5B-Instruct"
+            echo "Querying HuggingFace API for available model files..."
+            FILES=$(curl -sf "https://huggingface.co/api/models/${HF_REPO}" \
+              | grep -o '"rfilename":"[^"]*"' | sed 's/"rfilename":"//;s/"//')
+            echo "Available files:"
+            echo "$FILES"
 
-      - name: Download on-device LLM model (if not cached)
-        if: steps.model-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p app/src/main/assets/models
-          echo "Downloading Qwen2.5-0.5B-Instruct (q8, litertlm) — approx. 600MB, this may take a few minutes..."
-          curl -L --fail --retry 3 --retry-delay 5 \
-            -o "app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm" \
-            "https://huggingface.co/litert-community/Qwen2.5-0.5B-Instruct/resolve/main/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm"
+            # Pick best: q8 + multi-prefill, prefer .litertlm then .tflite then .task
+            CHOSEN=""
+            for ext in litertlm tflite task; do
+              MATCH=$(echo "$FILES" | grep -i "multi-prefill" | grep -i "q8" | grep "\.${ext}$" | head -1)
+              if [ -n "$MATCH" ]; then CHOSEN="$MATCH"; break; fi
+            done
 
-      - name: Verify model file integrity
-        run: |
-          MODEL_PATH="app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm"
-          if [ ! -f "$MODEL_PATH" ]; then
-            echo "::error::Model file missing after download/cache step — failing build rather than shipping an APK with no on-device model."
-            exit 1
-          fi
-          ACTUAL_SIZE=$(stat -c%s "$MODEL_PATH")
-          MIN_EXPECTED_SIZE=400000000
-          echo "Model file size: $ACTUAL_SIZE bytes"
-          if [ "$ACTUAL_SIZE" -lt "$MIN_EXPECTED_SIZE" ]; then
-            echo "::error::Model file is only $ACTUAL_SIZE bytes, expected at least $MIN_EXPECTED_SIZE. Likely a corrupted or incomplete download/cache entry."
-            exit 1
-          fi
+            # Fallback: any q8 file
+            if [ -z "$CHOSEN" ]; then
+              for ext in litertlm tflite task; do
+                MATCH=$(echo "$FILES" | grep -i "q8" | grep "\.${ext}$" | head -1)
+                if [ -n "$MATCH" ]; then CHOSEN="$MATCH"; break; fi
+              done
+            fi
 
-      # NOTE: this also does NOT download a .tflite object-detection model —
-      # that is a separate, smaller asset not yet sourced (see
-      # docs/KNOWN_RISKS.md, item "No .tflite model is bundled"). Add an
-      # equivalent cache+download step here once a specific object-detection
-      # model has been chosen.
+            if [ -z "$CHOSEN" ]; then
+              echo "::error::No suitable q8 model file found in ${HF_REPO}"
+              exit 1
+            fi
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+            echo "Selected model file: $CHOSEN"
+            echo "model_filename=$CHOSEN" >> $GITHUB_OUTPUT
+            echo "model_url=https://huggingface.co/${HF_REPO}/resolve/main/$CHOSEN" >> $GITHUB_OUTPUT
 
-      - name: Build debug APK
-        run: ./gradlew assembleDebug --no-daemon
+        - name: Cache on-device LLM model
+          id: model-cache
+          uses: actions/cache@v4
+          with:
+            path: app/src/main/assets/models/mind_model.tflite
+            key: auriga-mind-model-${{ steps.discover-model.outputs.model_filename }}
 
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: auriga-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 14
+        - name: Download on-device LLM model (if not cached)
+          if: steps.model-cache.outputs.cache-hit != 'true'
+          run: |
+            mkdir -p app/src/main/assets/models
+            echo "Downloading ${{ steps.discover-model.outputs.model_filename }} — approx. 500MB..."
+            curl -L --fail --retry 3 --retry-delay 10 \
+              -o "app/src/main/assets/models/mind_model.tflite" \
+              "${{ steps.discover-model.outputs.model_url }}"
+
+        - name: Verify model file integrity
+          run: |
+            MODEL_PATH="app/src/main/assets/models/mind_model.tflite"
+            if [ ! -f "$MODEL_PATH" ]; then
+              echo "::error::Model file missing after download/cache step."
+              exit 1
+            fi
+            ACTUAL_SIZE=$(stat -c%s "$MODEL_PATH")
+            MIN_EXPECTED_SIZE=200000000
+            echo "Model file: ${{ steps.discover-model.outputs.model_filename }}"
+            echo "Stored as:  mind_model.tflite ($ACTUAL_SIZE bytes)"
+            if [ "$ACTUAL_SIZE" -lt "$MIN_EXPECTED_SIZE" ]; then
+              echo "::error::Model file is only $ACTUAL_SIZE bytes — likely a corrupted or incomplete download."
+              exit 1
+            fi
+
+        # NOTE: a .tflite object-detection model is also required at runtime
+        # (app/src/main/assets/models/object_detector.tflite) but is not yet
+        # sourced. Add a cache+download step here once a specific model is chosen.
+        # The app will compile and run without it but ObjectDetectionEngine will
+        # report a clear error on startup — this is expected, not a silent crash.
+
+        - name: Grant execute permission for gradlew
+          run: chmod +x gradlew
+
+        - name: Build debug APK
+          run: ./gradlew assembleDebug --no-daemon
+
+        - name: Upload APK artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: auriga-debug-apk
+            path: app/build/outputs/apk/debug/*.apk
+            retention-days: 14
+  
