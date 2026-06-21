@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Mataimakin ganinka na musamman</string>
+    <string name="permission_camera_rationale">Auriga na bukatar izinin kamara don ganin abubuwan da ke kewaye da kai da gargadin kai game da hatsari.</string>
+    <string name="status_starting">Ana fara Auriga…</string>
+    <string name="status_running">Auriga na lura da kewayenka.</string>
+    <string name="status_model_loading">Ana loda mataimaki na cikin na'ura…</string>
+    <string name="status_model_unavailable">Mataimakin murya bai samuwa a yanzu ba. Babban jagora yana aiki har yanzu.</string>
+</resources>

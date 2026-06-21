@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">آپ کا معاون بصارت کو-پائلٹ</string>
+    <string name="permission_camera_rationale">Auriga کو آپ کے ارد گرد کی دنیا دیکھنے اور خطرات سے خبردار کرنے کے لیے کیمرے تک رسائی کی ضرورت ہے۔</string>
+    <string name="status_starting">Auriga شروع ہو رہا ہے…</string>
+    <string name="status_running">Auriga نگرانی کر رہا ہے۔</string>
+    <string name="status_model_loading">آن-ڈیوائس اسسٹنٹ لوڈ ہو رہا ہے…</string>
+    <string name="status_model_unavailable">صوتی معاون ابھی دستیاب نہیں ہے۔ بنیادی نیویگیشن اب بھی فعال ہے۔</string>
+</resources>

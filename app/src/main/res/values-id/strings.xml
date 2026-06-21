@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Co-pilot penglihatan bantu Anda</string>
+    <string name="permission_camera_rationale">Auriga membutuhkan akses kamera untuk melihat lingkungan sekitar Anda dan memperingatkan Anda akan bahaya.</string>
+    <string name="status_starting">Auriga sedang memulai…</string>
+    <string name="status_running">Auriga sedang mengawasi.</string>
+    <string name="status_model_loading">Memuat asisten di perangkat…</string>
+    <string name="status_model_unavailable">Asisten suara saat ini tidak tersedia. Navigasi inti tetap aktif.</string>
+</resources>

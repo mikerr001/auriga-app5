@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">আপনার সহায়ক দৃষ্টি সহ-পাইলট</string>
+    <string name="permission_camera_rationale">Auriga-র আপনার চারপাশের পরিবেশ দেখতে এবং বিপদ থেকে সতর্ক করতে ক্যামেরা অ্যাক্সেস প্রয়োজন।</string>
+    <string name="status_starting">Auriga চালু হচ্ছে…</string>
+    <string name="status_running">Auriga পর্যবেক্ষণ করছে।</string>
+    <string name="status_model_loading">অন-ডিভাইস সহায়ক লোড হচ্ছে…</string>
+    <string name="status_model_unavailable">ভয়েস সহায়ক এখন উপলব্ধ নেই। মূল নেভিগেশন এখনও সক্রিয়।</string>
+</resources>

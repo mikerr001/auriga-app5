@@ -1,0 +1,85 @@
+name: Build Auriga Debug APK
+
+# Single, authoritative build workflow. Auriga v2 intentionally has only
+# ONE workflow file — the original AURIGA repo's confusion came from four
+# separate workflows (android_build.yml, build-android.yml, build-apk.yml,
+# android_release.yml) all triggering on every push to main simultaneously.
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # ---------------------------------------------------------------
+      # On-device LLM model bundling
+      # ---------------------------------------------------------------
+      # Qwen2.5-0.5B-Instruct (litert-community) is Apache-2.0 licensed and
+      # UNGATED on Hugging Face — no account login, no license
+      # click-through, no auth token required. This is a real, working
+      # anonymous download, unlike an earlier attempt with Gemma3-1B-IT
+      # (gated, and SoC-specific filenames with no single universal file —
+      # see docs/KNOWN_RISKS.md for that history).
+      - name: Cache on-device LLM model
+        id: model-cache
+        uses: actions/cache@v4
+        with:
+          path: app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm
+          key: qwen2.5-0.5b-instruct-q8-litertlm-v1
+
+      - name: Download on-device LLM model (if not cached)
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p app/src/main/assets/models
+          echo "Downloading Qwen2.5-0.5B-Instruct (q8, litertlm) — approx. 600MB, this may take a few minutes..."
+          curl -L --fail --retry 3 --retry-delay 5 \
+            -o "app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm" \
+            "https://huggingface.co/litert-community/Qwen2.5-0.5B-Instruct/resolve/main/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm"
+
+      - name: Verify model file integrity
+        run: |
+          MODEL_PATH="app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm"
+          if [ ! -f "$MODEL_PATH" ]; then
+            echo "::error::Model file missing after download/cache step — failing build rather than shipping an APK with no on-device model."
+            exit 1
+          fi
+          ACTUAL_SIZE=$(stat -c%s "$MODEL_PATH")
+          MIN_EXPECTED_SIZE=400000000
+          echo "Model file size: $ACTUAL_SIZE bytes"
+          if [ "$ACTUAL_SIZE" -lt "$MIN_EXPECTED_SIZE" ]; then
+            echo "::error::Model file is only $ACTUAL_SIZE bytes, expected at least $MIN_EXPECTED_SIZE. Likely a corrupted or incomplete download/cache entry."
+            exit 1
+          fi
+
+      # NOTE: this also does NOT download a .tflite object-detection model —
+      # that is a separate, smaller asset not yet sourced (see
+      # docs/KNOWN_RISKS.md, item "No .tflite model is bundled"). Add an
+      # equivalent cache+download step here once a specific object-detection
+      # model has been chosen.
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: auriga-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 14

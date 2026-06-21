@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Auriga" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/auriga_accent</item>
+        <item name="android:windowBackground">@color/auriga_background</item>
+        <item name="colorOnPrimary">@color/auriga_text_primary</item>
+    </style>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Ihr unterstützender Sehassistent</string>
+    <string name="permission_camera_rationale">Auriga benötigt Kamerazugriff, um Ihre Umgebung zu erkennen und Sie vor Gefahren zu warnen.</string>
+    <string name="status_starting">Auriga wird gestartet…</string>
+    <string name="status_running">Auriga beobachtet Ihre Umgebung.</string>
+    <string name="status_model_loading">Assistent wird auf dem Gerät geladen…</string>
+    <string name="status_model_unavailable">Der Sprachassistent ist derzeit nicht verfügbar. Die Kernnavigation ist weiterhin aktiv.</string>
+</resources>

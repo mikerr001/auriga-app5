@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Người đồng hành thị giác hỗ trợ của bạn</string>
+    <string name="permission_camera_rationale">Auriga cần quyền truy cập camera để quan sát thế giới xung quanh bạn và cảnh báo bạn về các nguy hiểm.</string>
+    <string name="status_starting">Đang khởi động Auriga…</string>
+    <string name="status_running">Auriga đang theo dõi.</string>
+    <string name="status_model_loading">Đang tải trợ lý trên thiết bị…</string>
+    <string name="status_model_unavailable">Trợ lý giọng nói hiện không khả dụng. Điều hướng chính vẫn đang hoạt động.</string>
+</resources>

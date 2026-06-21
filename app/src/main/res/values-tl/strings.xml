@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Ang iyong katuwang sa paningin</string>
+    <string name="permission_camera_rationale">Kailangan ng Auriga ng access sa camera para makita ang nakapaligid sa iyo at bigyan ka ng babala tungkol sa mga panganib.</string>
+    <string name="status_starting">Nagsisimula ang Auriga…</string>
+    <string name="status_running">Nagbabantay ang Auriga.</string>
+    <string name="status_model_loading">Nilo-load ang katulong sa device…</string>
+    <string name="status_model_unavailable">Hindi available ang voice assistant sa ngayon. Aktibo pa rin ang pangunahing navigation.</string>
+</resources>

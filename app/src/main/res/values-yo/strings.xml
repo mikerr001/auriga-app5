@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Olùrànlọ́wọ́ ìríran rẹ</string>
+    <string name="permission_camera_rationale">Auriga nílò àǎyè kámẹ́rà láti rí àyíká rẹ àti láti kìlọ̀ fún ọ nípa ewu.</string>
+    <string name="status_starting">Auriga ń bẹ̀rẹ̀…</string>
+    <string name="status_running">Auriga ń ṣọ́ àyíká rẹ.</string>
+    <string name="status_model_loading">N gbé olùrànlọ́wọ́ orí ẹ̀rọ wọlé…</string>
+    <string name="status_model_unavailable">Olùrànlọ́wọ́ ohùn kò sí lọ́wọ́lọ́wọ́. Ìṣàkọ́sọ́nà pàtàkì ń ṣiṣẹ́ síi.</string>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Your assistive vision co-pilot</string>
+    <string name="permission_camera_rationale">Auriga needs camera access to see the world around you and warn you of hazards.</string>
+    <string name="status_starting">Starting Auriga…</string>
+    <string name="status_running">Auriga is watching.</string>
+    <string name="status_model_loading">Loading on-device assistant…</string>
+    <string name="status_model_unavailable">Voice assistant unavailable right now. Core navigation still active.</string>
+    <string name="status_model_low_ram">On-device voice assistant isn\'t supported on this phone\'s memory. Core navigation still works fully, and online voice assistant is available when connected.</string>
+</resources>

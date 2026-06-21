@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">您的辅助视觉副驾驶</string>
+    <string name="permission_camera_rationale">Auriga 需要使用相机来观察您周围的环境并提醒您注意危险。</string>
+    <string name="status_starting">Auriga 正在启动…</string>
+    <string name="status_running">Auriga 正在为您观察周围环境。</string>
+    <string name="status_model_loading">正在加载设备端助手…</string>
+    <string name="status_model_unavailable">语音助手暂时不可用。核心导航功能仍在运行。</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">دستیار بینایی همراه شما</string>
+    <string name="permission_camera_rationale">Auriga برای دیدن محیط اطراف شما و هشدار درباره خطرات به دسترسی دوربین نیاز دارد.</string>
+    <string name="status_starting">Auriga در حال راه‌اندازی است…</string>
+    <string name="status_running">Auriga در حال نظارت است.</string>
+    <string name="status_model_loading">در حال بارگذاری دستیار درون‌دستگاهی…</string>
+    <string name="status_model_unavailable">دستیار صوتی در حال حاضر در دسترس نیست. ناوبری اصلی همچنان فعال است.</string>
+</resources>
