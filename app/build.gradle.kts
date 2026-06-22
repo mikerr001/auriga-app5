@@ -22,8 +22,8 @@ plugins {
           // (see .github/workflows/build-debug-apk.yml) and always stored under
           // the fixed internal name "mind_model.tflite" — so this value never
           // needs to change when HuggingFace renames the upstream file.
-          buildConfigField("String", "ONDEVICE_MODEL_HF_REPO", "\"litert-community/Qwen2.5-0.5B-Instruct\"")
-          buildConfigField("String", "ONDEVICE_MODEL_FILENAME", "\"mind_model.tflite\"")
+          buildConfigField("String", "ONDEVICE_MODEL_HF_REPO", ""litert-community/Qwen2.5-0.5B-Instruct"")
+          buildConfigField("String", "ONDEVICE_MODEL_FILENAME", ""mind_model.tflite"")
           buildConfigField("long", "ONDEVICE_MODEL_MIN_BYTES", "200_000_000L")
           buildConfigField("long", "ONDEVICE_MODEL_EST_BYTES", "520_000_000L")
           // Minimum total device RAM (bytes) before the on-device model is
@@ -34,8 +34,8 @@ plugins {
           buildConfigField("long", "ONDEVICE_MODEL_MIN_DEVICE_RAM_BYTES", "3_000_000_000L")
 
           // Placeholder cloud LLM endpoint — wire up real provider/key later.
-          buildConfigField("String", "CLOUD_LLM_ENDPOINT", "\"https://api.placeholder.invalid/v1/chat\"")
-          buildConfigField("String", "CLOUD_LLM_API_KEY", "\"\""  )
+          buildConfigField("String", "CLOUD_LLM_ENDPOINT", ""https://api.placeholder.invalid/v1/chat"")
+          buildConfigField("String", "CLOUD_LLM_API_KEY", """"  )
       }
 
       buildFeatures {
@@ -59,14 +59,19 @@ plugins {
           targetCompatibility = JavaVersion.VERSION_17
       }
 
-      compilerOptions {
-          jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
-      }
-
       packaging {
           resources {
               excludes += "/META-INF/{AL2.0,LGPL2.1}"
           }
+      }
+  }
+
+  // Configure Kotlin JVM target via tasks — this is the correct approach for
+  // Kotlin 2.x where the old kotlinOptions.jvmTarget (String) setter was
+  // removed, and android.compilerOptions is not available in this AGP version.
+  tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+      compilerOptions {
+          jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
       }
   }
 
@@ -110,4 +115,3 @@ plugins {
       androidTestImplementation("androidx.test.ext:junit:1.2.1")
       androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
   }
-  
