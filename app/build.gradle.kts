@@ -94,7 +94,7 @@ plugins {
 
       // LiteRT-LM — on-device small-model text generation. Replaces the
       // deprecated com.google.mediapipe:tasks-genai (see MindEngine.kt).
-      implementation("com.google.ai.edge.litertlm:litertlm-android:latest.release")
+      implementation("com.google.ai.edge.litertlm:litertlm-android:0.13.1")
 
       // Networking for model download + cloud LLM fallback
       implementation("com.squareup.okhttp3:okhttp:4.12.0")
