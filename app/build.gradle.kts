@@ -101,9 +101,9 @@ plugins {
 
       // Local persistence — Room with KSP (not annotationProcessor: Kotlin
       // entities/DAOs require KSP to generate _Impl classes correctly).
-      implementation("androidx.room:room-runtime:2.6.1")
-      implementation("androidx.room:room-ktx:2.6.1")
-      ksp("androidx.room:room-compiler:2.6.1")
+      implementation("androidx.room:room-runtime:2.7.2")
+      implementation("androidx.room:room-ktx:2.7.2")
+      ksp("androidx.room:room-compiler:2.7.2")
 
       // Testing
       testImplementation("junit:junit:4.13.2")
