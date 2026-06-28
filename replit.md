@@ -1,6 +1,6 @@
-# [Project name]
+# Auriga Platform
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Auriga is an offline-first spatial intelligence co-pilot for blind/visually impaired users, launching in Kenya. This monorepo hosts the marketing landing page, the internal ops/admin dashboard, and the shared backend API.
 
 ## Run & Operate
 
@@ -22,15 +22,27 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `lib/api-spec/openapi.yaml` — OpenAPI contract (source of truth for all endpoints)
+- `lib/db/src/schema/` — Drizzle table definitions (waitlist, devices, hazards, sessions)
+- `lib/api-client-react/src/generated/` — React Query hooks (auto-generated, do not edit)
+- `lib/api-zod/src/generated/` — Zod validation schemas (auto-generated, do not edit)
+- `artifacts/api-server/src/routes/` — Express route handlers (waitlist, devices, hazards, sessions, stats)
+- `artifacts/auriga-landing/` — Public marketing landing page with waitlist signup
+- `artifacts/auriga-dashboard/` — Internal ops dashboard (fleet, hazards, sessions, waitlist)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Contract-first API: OpenAPI spec → Orval codegen → typed hooks + Zod schemas. Never hand-write these.
+- All DB schema lives in `lib/db/src/schema/`; run `pnpm --filter @workspace/db run push` after any schema change, then `pnpm run typecheck:libs` to rebuild declarations.
+- Routes are split by domain (waitlist.ts, devices.ts, hazards.ts, sessions.ts, stats.ts) under `artifacts/api-server/src/routes/`.
+- The `/api` base path is handled by the reverse proxy; routes do not add it themselves.
+- `/hazards/summary` is registered before `/hazards/:id` (static before dynamic) — do not reorder.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- **Landing page** (`/`): WCAG AAA accessible, dark dragon aesthetic, Framer Motion animations, real waitlist form wired to `POST /api/waitlist`.
+- **Ops Dashboard** (`/dashboard/`): Mission Control overview (KPI tiles, hazard feed, type breakdown), Waitlist management, Device fleet tracking, Hazard event log with filtering, Field session log.
+- **API** (`/api`): REST API serving all dashboard data and accepting waitlist signups from the landing page.
 
 ## User preferences
 
@@ -38,7 +50,10 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- After editing any `lib/*` schema or source: run `pnpm run typecheck:libs` before checking artifact typechecks, or you'll get stale-declaration errors (TS2305).
+- `/hazards/summary` must be registered before the dynamic `/hazards` route — Express matches first-registered.
+- Body schema component names in `openapi.yaml` must be entity-shaped (`WaitlistInput`, not `JoinWaitlistBody`) to avoid TS2308 Orval collision.
+- The Android app (`mikerr001/auriga-app5`) already has a working build-debug-apk.yml GitHub Actions workflow — do not modify it.
 
 ## Pointers
 

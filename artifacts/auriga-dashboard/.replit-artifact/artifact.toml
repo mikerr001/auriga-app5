@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/dashboard/"
+title = "Auriga Ops Dashboard"
+version = "1.0.0"
+id = "artifacts/auriga-dashboard"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/dashboard/" ]
+localPort = 21961
+
+[services.development]
+run = "pnpm --filter @workspace/auriga-dashboard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/auriga-dashboard", "run", "build" ]
+publicDir = "artifacts/auriga-dashboard/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21961"
+BASE_PATH = "/dashboard/"

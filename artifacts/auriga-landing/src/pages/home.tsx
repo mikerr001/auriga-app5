@@ -3,16 +3,33 @@ import { motion } from "framer-motion";
 import { Eye, Map, Zap, WifiOff, Globe, ArrowRight, ShieldCheck, Check, Github, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useJoinWaitlist } from "@workspace/api-client-react";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const joinWaitlist = useJoinWaitlist();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      setSubmitted(true);
-    }
+    if (!email) return;
+    setError(null);
+    joinWaitlist.mutate(
+      { data: { email, source: "landing-page" } },
+      {
+        onSuccess: () => setSubmitted(true),
+        onError: (err: unknown) => {
+          const msg = (err as { data?: { error?: string } })?.data?.error;
+          if (msg?.includes("already")) {
+            setSubmitted(true);
+          } else {
+            setError("Something went wrong. Please try again.");
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -280,6 +297,9 @@ export default function Home() {
               </Button>
             </form>
             
+            {error && (
+              <p className="mt-4 text-sm text-red-300" role="alert">{error}</p>
+            )}
             {/* Screen Reader Live Region for Form Submission */}
             <div aria-live="polite" className="sr-only">
               {submitted ? "Thank you for joining the Auriga waitlist. You will receive an email shortly." : ""}

@@ -1,22 +1,31 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Auriga backend API — waitlist, device telemetry, hazard events, field tests
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: waitlist
+    description: Beta waitlist signups
+  - name: devices
+    description: Field test devices
+  - name: hazards
+    description: Hazard detection events
+  - name: sessions
+    description: Field test sessions
+  - name: stats
+    description: Dashboard aggregates
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +33,442 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /waitlist:
+    post:
+      operationId: joinWaitlist
+      tags: [waitlist]
+      summary: Add email to beta waitlist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WaitlistInput"
+      responses:
+        "201":
+          description: Added to waitlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaitlistEntry"
+        "409":
+          description: Already on waitlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    get:
+      operationId: listWaitlist
+      tags: [waitlist]
+      summary: List all waitlist signups
+      responses:
+        "200":
+          description: Waitlist entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WaitlistEntry"
+
+  /waitlist/stats:
+    get:
+      operationId: getWaitlistStats
+      tags: [waitlist]
+      summary: Waitlist stats by country/source
+      responses:
+        "200":
+          description: Aggregated waitlist stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WaitlistStats"
+
+  /devices:
+    get:
+      operationId: listDevices
+      tags: [devices]
+      summary: List all registered field test devices
+      responses:
+        "200":
+          description: Device list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+    post:
+      operationId: registerDevice
+      tags: [devices]
+      summary: Register a new field test device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceInput"
+      responses:
+        "201":
+          description: Device registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+
+  /devices/{deviceId}:
+    get:
+      operationId: getDevice
+      tags: [devices]
+      summary: Get device details
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Device
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+
+  /hazards:
+    get:
+      operationId: listHazards
+      tags: [hazards]
+      summary: List hazard detection events
+      parameters:
+        - name: deviceId
+          in: query
+          schema:
+            type: ["integer", "null"]
+        - name: limit
+          in: query
+          schema:
+            type: ["integer", "null"]
+      responses:
+        "200":
+          description: Hazard events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/HazardEvent"
+    post:
+      operationId: reportHazard
+      tags: [hazards]
+      summary: Report a hazard detection event from device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HazardInput"
+      responses:
+        "201":
+          description: Hazard recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HazardEvent"
+
+  /hazards/summary:
+    get:
+      operationId: getHazardSummary
+      tags: [hazards]
+      summary: Hazard type breakdown and recent activity
+      responses:
+        "200":
+          description: Hazard summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HazardSummary"
+
+  /sessions:
+    get:
+      operationId: listSessions
+      tags: [sessions]
+      summary: List field test sessions
+      responses:
+        "200":
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FieldSession"
+    post:
+      operationId: createSession
+      tags: [sessions]
+      summary: Log a field test session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FieldSessionInput"
+      responses:
+        "201":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FieldSession"
+
+  /stats/dashboard:
+    get:
+      operationId: getDashboardStats
+      tags: [stats]
+      summary: Top-level dashboard summary metrics
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    ApiError:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+
+    WaitlistInput:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+        name:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        source:
+          type: ["string", "null"]
+
+    WaitlistEntry:
+      type: object
+      required: [id, email, createdAt]
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: ["string", "null"]
+        country:
+          type: ["string", "null"]
+        source:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    WaitlistStats:
+      type: object
+      required: [total, byCountry, bySource]
+      properties:
+        total:
+          type: integer
+        byCountry:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountStat"
+        bySource:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountStat"
+
+    CountStat:
+      type: object
+      required: [label, count]
+      properties:
+        label:
+          type: string
+        count:
+          type: integer
+
+    DeviceInput:
+      type: object
+      required: [deviceName, androidVersion, ramGb]
+      properties:
+        deviceName:
+          type: string
+        androidVersion:
+          type: string
+        ramGb:
+          type: number
+        location:
+          type: ["string", "null"]
+        testerName:
+          type: ["string", "null"]
+
+    Device:
+      type: object
+      required: [id, deviceName, androidVersion, ramGb, status, createdAt]
+      properties:
+        id:
+          type: integer
+        deviceName:
+          type: string
+        androidVersion:
+          type: string
+        ramGb:
+          type: number
+        location:
+          type: ["string", "null"]
+        testerName:
+          type: ["string", "null"]
+        status:
+          type: string
+        lastSeenAt:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    HazardInput:
+      type: object
+      required: [deviceId, hazardType, confidence]
+      properties:
+        deviceId:
+          type: integer
+        hazardType:
+          type: string
+        confidence:
+          type: number
+        distanceMeters:
+          type: ["number", "null"]
+        bearingDegrees:
+          type: ["number", "null"]
+        audioAlertFired:
+          type: ["boolean", "null"]
+        hapticAlertFired:
+          type: ["boolean", "null"]
+        notes:
+          type: ["string", "null"]
+
+    HazardEvent:
+      type: object
+      required: [id, deviceId, hazardType, confidence, detectedAt]
+      properties:
+        id:
+          type: integer
+        deviceId:
+          type: integer
+        hazardType:
+          type: string
+        confidence:
+          type: number
+        distanceMeters:
+          type: ["number", "null"]
+        bearingDegrees:
+          type: ["number", "null"]
+        audioAlertFired:
+          type: ["boolean", "null"]
+        hapticAlertFired:
+          type: ["boolean", "null"]
+        notes:
+          type: ["string", "null"]
+        detectedAt:
+          type: string
+
+    HazardSummary:
+      type: object
+      required: [totalEvents, byType, recentEvents, avgConfidence]
+      properties:
+        totalEvents:
+          type: integer
+        avgConfidence:
+          type: number
+        byType:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountStat"
+        recentEvents:
+          type: array
+          items:
+            $ref: "#/components/schemas/HazardEvent"
+
+    FieldSessionInput:
+      type: object
+      required: [deviceId, locationName, durationMinutes]
+      properties:
+        deviceId:
+          type: integer
+        locationName:
+          type: string
+        durationMinutes:
+          type: integer
+        hazardsDetected:
+          type: ["integer", "null"]
+        modelLoaded:
+          type: ["boolean", "null"]
+        cameraWorked:
+          type: ["boolean", "null"]
+        audioWorked:
+          type: ["boolean", "null"]
+        notes:
+          type: ["string", "null"]
+
+    FieldSession:
+      type: object
+      required: [id, deviceId, locationName, durationMinutes, createdAt]
+      properties:
+        id:
+          type: integer
+        deviceId:
+          type: integer
+        locationName:
+          type: string
+        durationMinutes:
+          type: integer
+        hazardsDetected:
+          type: ["integer", "null"]
+        modelLoaded:
+          type: ["boolean", "null"]
+        cameraWorked:
+          type: ["boolean", "null"]
+        audioWorked:
+          type: ["boolean", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    DashboardStats:
+      type: object
+      required: [waitlistTotal, devicesTotal, hazardsTotal, sessionsTotal, recentHazards, topHazardTypes]
+      properties:
+        waitlistTotal:
+          type: integer
+        devicesTotal:
+          type: integer
+        hazardsTotal:
+          type: integer
+        sessionsTotal:
+          type: integer
+        recentHazards:
+          type: array
+          items:
+            $ref: "#/components/schemas/HazardEvent"
+        topHazardTypes:
+          type: array
+          items:
+            $ref: "#/components/schemas/CountStat"
