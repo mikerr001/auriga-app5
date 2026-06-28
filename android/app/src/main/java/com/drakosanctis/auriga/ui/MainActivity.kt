@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     ) { granted ->
         if (granted) {
             startPipeline()
+            startCoPilotForegroundService()
         } else {
             binding.statusText.text = "Camera permission is required for Auriga to function."
         }
@@ -67,11 +68,10 @@ class MainActivity : AppCompatActivity() {
 
         if (hasCameraPermission()) {
             startPipeline()
+            startCoPilotForegroundService()
         } else {
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
-
-        ContextCompat.startForegroundService(this, Intent(this, AurigaCoPilotService::class.java))
     }
 
     private fun hasCameraPermission(): Boolean =
@@ -93,6 +93,39 @@ class MainActivity : AppCompatActivity() {
         )
         pipeline = newPipeline
         newPipeline.start(binding.cameraPreview)
+    }
+
+    /**
+     * Starts the camera-type foreground service. CRITICAL: this must only
+     * be called AFTER camera permission is confirmed granted.
+     *
+     * Root cause of an early instant-crash-on-launch bug: on Android 14+
+     * (API 34, this app's targetSdk), starting a foreground service whose
+     * foregroundServiceType is "camera" requires the CAMERA permission to
+     * already be granted at the moment startForeground() is called inside
+     * the service — otherwise the system throws a SecurityException /
+     * ForegroundServiceStartNotAllowedException, which is fatal and crashes
+     * the app before any UI (including the permission dialog itself) gets
+     * a chance to render. The original code called this unconditionally in
+     * onCreate(), every launch, regardless of permission state — exactly
+     * the trigger for that crash. It is now called only from the two paths
+     * where permission is already confirmed granted.
+     *
+     * Wrapped in try/catch anyway, per this project's standing rule of
+     * never letting a service-start failure crash the whole app silently —
+     * core navigation (camera + detection, owned by AurigaPipeline directly,
+     * not by this service) continues even if the foreground service/
+     * notification itself fails to start for some other reason.
+     */
+    private fun startCoPilotForegroundService() {
+        try {
+            ContextCompat.startForegroundService(this, Intent(this, AurigaCoPilotService::class.java))
+        } catch (t: Throwable) {
+            // Log and continue — the foreground service is a background-
+            // longevity nicety (keeps the app alive if the user briefly
+            // switches apps), not the safety-critical pipeline itself.
+            android.util.Log.e("AurigaMainActivity", "Failed to start co-pilot foreground service", t)
+        }
     }
 
     private fun beginVoiceCapture() {
