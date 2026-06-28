@@ -1,0 +1,62 @@
+i is there a tool on GitHub or a website i can drop the code or debug apk
+
+2:53 PM
+Let me check what's actually available right now rather than rely on potentially stale knowledge, since this kind of tooling changes often.
+
+
+Searched the web
+Searched the web
+Good, this gives me real current options rather than relying on potentially stale knowledge. Let me lay out what's actually trustworthy for your specific case, since several of these have real tradeoffs you should know before picking one — Auriga's camera/sensor/RAM-dependent behavior makes the choice matter more than for a typical app.
+
+What I'd actually recommend, in order
+Appetize.io — the most credible name in this list for legitimate developer use, not a sketchy "run any app free" site. It's a real developer-testing platform with a free tier limited to 100 minutes/month, requiring API/SDK integration — you sign up, get an API key, upload the APK, and it runs in a genuine browser-streamed Android emulator. This is the safest, most legitimate option for a real product you're building, not a throwaway test. 
+WHO
+
+BrowserStack App Live — provides instant access to real Android devices from real vendors (Samsung, OnePlus, Motorola, etc.) — upload the APK, choose the device, start testing directly on actual hardware, not just emulation. Given Auriga's whole architecture depends on real camera behavior, real RAM constraints across actual budget devices, this is genuinely the better fit for your specific app over a pure emulator — it would let you test on something closer to an actual Samsung Galaxy A-series device, which is exactly your target market. This is paid/commercial-grade tooling though, not generally free for extended use. 
+World Population Review
+World Population Review
+
+Firebase Test Lab (which I mentioned earlier, not in this search but still real and relevant) — Google's own cloud device farm, free tier available, runs on real physical devices, and is purpose-built for exactly this kind of pre-release Android testing — worth mentioning alongside these since it's arguably the most "official" option and integrates naturally if you're already in the Google/Android ecosystem.
+
+What I'd actively avoid
+The smaller, no-signup, "drop any APK and run it free" sites — ApkOnline, MyAndroid, the various TestObject-style listicle entries — come with real risk that's specifically relevant to this app: not all free online APK services are safe, some may contain malicious code, and you should always be careful about where you run APK files from, but more specifically for you: Auriga's APK contains your unreleased on-device LLM model file and your actual production code — uploading that to an anonymous, ad-supported, no-account free emulator site is uploading your real IP to an unknown third party's servers for no good reason, when legitimate developer-tier options (Appetize, BrowserStack, Firebase Test Lab) exist and aren't meaningfully harder to use. 
+Wikipedia
+
+My honest recommendation given where you are right now
+Given the actual open question is narrow and specific — "does the model file resolve, does detection run, does a hazard warning fire" — I'd start with Appetize.io's free tier. It's legitimate, it's quick to set up, 100 minutes/month is plenty for this kind of focused verification pass, and it'll let you (or me, if you share screenshots/recordings back) actually see what's happening rather than guessing from file contents alone the way I've been doing so far.
+
+Want me to walk through the Appetize signup-and-upload flow step by step?
+
+
+tabRecording-28-6-2026-15-48.mp4
+mp4
+
+i tested n it failed ;
+
+3:49 PM
+Let me actually watch this recording before saying anything about it.
+
+
+Check the uploaded video file
+Check the uploaded video file
+I don't have a video-watching tool available in this environment — I can't actually play/view the .mp4 content directly. Let me check if I can extract frames from it to at least see key moments visually.
+
+
+Check for video processing tools
+Check for video processing tools
+ffmpeg is available — let me extract frames so I can actually see what happened.
+
+
+Ran 2 commands
+Ran 2 commands
+56.7 seconds — a screen recording, 1600x716 (a browser tab, hence the filename). Let me extract frames at regular intervals to see the whole sequence of what happened.
+
+
+Extract one frame per second from the recording
+Extract one frame per second from the recording
+57 frames, one per second. Let me look through these systematically — starting with a spread across the timeline to understand the overall flow before zooming into specific moments.
+
+
+View first frame to see starting state
+View first frame to see starting state
+This is great — you went with BrowserStack (real device cloud, Galaxy S20 Ultra), exactly the legitimate option. I can see real Logcat output on the right, which is the most valuable thing for actually diagnosing what failed. Let me trace through the frames in s...
