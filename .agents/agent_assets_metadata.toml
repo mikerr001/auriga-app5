@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "9aECoDdW4DznoMJ8R2CS2"
+uri = "file://artifacts/auriga-landing/public/hero-dragon-eye.png"
+type = "image"
+title = "Dragon eye camera sensor"
+
+[[generated]]
+id = "ScdgfcQbYea_I-8_LvL_L"
+uri = "file://artifacts/auriga-landing/public/spatial-map.png"
+type = "image"
+title = "Spatial awareness map"

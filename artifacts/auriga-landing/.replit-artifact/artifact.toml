@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Auriga Landing Page"
+version = "1.0.0"
+id = "artifacts/auriga-landing"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23120
+
+[services.development]
+run = "pnpm --filter @workspace/auriga-landing run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/auriga-landing", "run", "build" ]
+publicDir = "artifacts/auriga-landing/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23120"
+BASE_PATH = "/"
