@@ -63,3 +63,24 @@ jobs:
         env:
           PORT: 21961
           BASE_PATH: /dashboard/
+
+      - name: Upload API server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-server-${{ github.sha }}
+          path: artifacts/api-server/dist/
+          retention-days: 14
+
+      - name: Upload landing page artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: auriga-landing-${{ github.sha }}
+          path: artifacts/auriga-landing/dist/
+          retention-days: 14
+
+      - name: Upload ops dashboard artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: auriga-dashboard-${{ github.sha }}
+          path: artifacts/auriga-dashboard/dist/
+          retention-days: 14
