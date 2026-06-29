@@ -1,65 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Camera is the core sensing modality — without it Auriga cannot function. -->
     <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- Microphone for "Ask Auriga" voice queries. -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
-    <!-- Vibration for haptic hazard alerts. -->
-    <uses-permission android:name="android.permission.VIBRATE" />
-
-    <!-- Internet for cloud LLM fallback and on-device model download. -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Required to call startForegroundService() at all (API 28+). -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <!--
-        Required on Android 14+ (API 34, this app's targetSdk) to declare a
-        foreground service that uses the camera. Without this the system will
-        throw a SecurityException / ForegroundServiceStartNotAllowedException
-        before the service even calls startForeground() — an instant crash,
-        as confirmed by real-device testing on Android 13+ devices.
-    -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-    <!-- Hardware feature requirements — non-required so the app can still
-         reach low-spec devices that declare camera support via software. -->
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-    <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
     <application
         android:name=".core.AurigaApplication"
-        android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:allowBackup="true"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.Auriga">
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Auriga"
+        android:usesCleartextTraffic="false">
 
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!--
-            foregroundServiceType="camera" is mandatory on API 34+ for any
-            service that accesses the camera while in the foreground. Declaring
-            it here is what enables the FOREGROUND_SERVICE_CAMERA permission to
-            cover this service. If this attribute is missing or wrong, the
-            startForeground() call inside onStartCommand will be rejected by the
-            system on Android 14+.
-        -->
         <service
             android:name=".core.AurigaCoPilotService"
             android:exported="false"

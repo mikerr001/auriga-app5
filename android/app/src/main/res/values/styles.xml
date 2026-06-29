@@ -1,25 +1,7 @@
 <resources>
     <style name="Theme.Auriga" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/auriga_accent</item>
-        <item name="colorPrimaryDark">@color/auriga_background</item>
-        <item name="colorAccent">@color/auriga_accent_bright</item>
         <item name="android:windowBackground">@color/auriga_background</item>
-        <item name="android:statusBarColor">@color/auriga_background</item>
-        <item name="android:navigationBarColor">@color/auriga_background</item>
-        <item name="colorOnPrimary">@color/auriga_background</item>
-        <item name="android:textColor">@color/auriga_text_primary</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-    </style>
-
-    <style name="Widget.Auriga.Button" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/auriga_red</item>
-        <item name="android:textColor">@color/auriga_accent_bright</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">0.12</item>
-        <item name="android:fontFamily">sans-serif-condensed</item>
-        <item name="strokeColor">@color/auriga_accent</item>
-        <item name="strokeWidth">1.5dp</item>
-        <item name="cornerRadius">2dp</item>
-        <item name="rippleColor">@color/auriga_accent</item>
+        <item name="colorOnPrimary">@color/auriga_text_primary</item>
     </style>
 </resources>

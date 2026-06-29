@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dragon launcher background — deep ink black with subtle radial glow.
-     gradientRadius must be a float (fraction of min dimension), not a percent string. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <gradient
-        android:type="radial"
-        android:gradientRadius="80dp"
-        android:startColor="#1A0A0A"
-        android:endColor="#06080C"
-        android:centerX="0.5"
-        android:centerY="0.5" />
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#0B0E14" />
 </shape>
