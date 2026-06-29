@@ -1,0 +1,2 @@
+- [Android Kotlin version policy](android-kotlin-version.md) — litertlm:latest.release tracks Kotlin metadata; pin both together or build breaks with metadata mismatch.
+- [Android project layout](android-project-layout.md) — the Android subproject lives under android/ inside the pnpm monorepo root; gradlew and build files are all inside android/.
