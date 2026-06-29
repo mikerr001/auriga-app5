@@ -31,9 +31,6 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x android/gradlew
-
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -43,6 +40,28 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Cache on-device LLM model
+        id: model-cache
+        uses: actions/cache@v4
+        with:
+          path: android/app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm
+          key: qwen-0.5b-instruct-q8-v1
+
+      - name: Download LLM model from HuggingFace
+        if: steps.model-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p android/app/src/main/assets/models
+          curl -L --retry 3 --retry-delay 10 \
+            "https://huggingface.co/litert-community/Qwen2.5-0.5B-Instruct/resolve/main/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm" \
+            -o "android/app/src/main/assets/models/Qwen2.5-0.5B-Instruct_multi-prefill-seq_q8_ekv4096.litertlm"
+          ls -lh android/app/src/main/assets/models/
+
+      - name: Fix ellipsis in locale strings
+        run: python3 android/fix_strings.py
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x android/gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
