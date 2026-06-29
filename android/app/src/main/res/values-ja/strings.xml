@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">あなたの視覚アシスタント・コパイロット</string>
+    <string name="permission_camera_rationale">Aurigaは周囲の状況を確認し、危険を警告するためにカメラへのアクセスが必要です。</string>
+    <string name="status_starting">Aurigaを起動しています…</string>
+    <string name="status_running">Aurigaが周囲を見守っています。</string>
+    <string name="status_model_loading">デバイス内アシスタントを読み込んでいます…</string>
+    <string name="status_model_unavailable">音声アシスタントは現在利用できません。基本的なナビゲーションは引き続き動作しています。</string>
+</resources>

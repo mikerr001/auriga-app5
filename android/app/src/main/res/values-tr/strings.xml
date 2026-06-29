@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Yardımcı görüş asistanınız</string>
+    <string name="permission_camera_rationale">Auriga, çevrenizi görmek ve sizi tehlikelere karşı uyarmak için kamera erişimine ihtiyaç duyar.</string>
+    <string name="status_starting">Auriga başlatılıyor…</string>
+    <string name="status_running">Auriga gözlemliyor.</string>
+    <string name="status_model_loading">Cihaz üzerindeki asistan yükleniyor…</string>
+    <string name="status_model_unavailable">Sesli asistan şu anda kullanılamıyor. Temel yönlendirme hâlâ etkin.</string>
+</resources>

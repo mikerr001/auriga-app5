@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">رفيقك المساعد للرؤية</string>
+    <string name="permission_camera_rationale">يحتاج Auriga إلى الوصول إلى الكاميرا لرؤية العالم من حولك وتحذيرك من المخاطر.</string>
+    <string name="status_starting">يتم تشغيل Auriga…</string>
+    <string name="status_running">Auriga يراقب الآن.</string>
+    <string name="status_model_loading">يتم تحميل المساعد على الجهاز…</string>
+    <string name="status_model_unavailable">المساعد الصوتي غير متوفر حاليًا. التنقل الأساسي لا يزال نشطًا.</string>
+</resources>

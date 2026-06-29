@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Ваш ассистивный визуальный помощник</string>
+    <string name="permission_camera_rationale">Auriga нужен доступ к камере, чтобы видеть окружающий мир и предупреждать вас об опасностях.</string>
+    <string name="status_starting">Запуск Auriga…</string>
+    <string name="status_running">Auriga наблюдает за обстановкой.</string>
+    <string name="status_model_loading">Загрузка локального ассистента…</string>
+    <string name="status_model_unavailable">Голосовой помощник сейчас недоступен. Основная навигация продолжает работать.</string>
+</resources>

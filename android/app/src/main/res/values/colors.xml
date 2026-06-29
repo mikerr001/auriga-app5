@@ -1,0 +1,10 @@
+<resources>
+    <color name="auriga_background">#0B0E14</color>
+    <color name="auriga_surface">#161B26</color>
+    <color name="auriga_accent">#4FD1C5</color>
+    <color name="auriga_danger">#E5484D</color>
+    <color name="auriga_caution">#F5A623</color>
+    <color name="auriga_safe">#4FD17C</color>
+    <color name="auriga_text_primary">#F5F7FA</color>
+    <color name="auriga_text_secondary">#A0AAB8</color>
+</resources>

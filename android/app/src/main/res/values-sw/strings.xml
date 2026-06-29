@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Msaidizi wako wa kuona</string>
+    <string name="permission_camera_rationale">Auriga inahitaji ruhusa ya kamera ili kuona mazingira yanayokuzunguka na kukutahadharisha kuhusu hatari.</string>
+    <string name="status_starting">Auriga inaanza…</string>
+    <string name="status_running">Auriga inaangalia mazingira yako.</string>
+    <string name="status_model_loading">Inapakia msaidizi wa kifaa…</string>
+    <string name="status_model_unavailable">Msaidizi wa sauti hapatikani kwa sasa. Mwongozo mkuu bado unafanya kazi.</string>
+</resources>

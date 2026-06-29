@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Onye enyemaka ọhụụ gị</string>
+    <string name="permission_camera_rationale">Auriga chọrọ ikike igwefoto ka ọ hụ gburugburu gị ma dọọ gị aka ná ntị banyere ihe ize ndụ.</string>
+    <string name="status_starting">Auriga na-amalite…</string>
+    <string name="status_running">Auriga na-eche nche.</string>
+    <string name="status_model_loading">Na-ebubata onye enyemaka dị n\'ngwaọrụ…</string>
+    <string name="status_model_unavailable">Onye enyemaka olu adịghị adị ugbu a. Ntụzịaka bụ isi ka na-arụ ọrụ.</string>
+</resources>

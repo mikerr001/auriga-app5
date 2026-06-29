@@ -4,19 +4,12 @@ on:
   push:
     branches: [main]
     paths:
-      - 'app/**'
-      - '*.gradle.kts'
-      - '*.gradle'
-      - 'gradle/**'
-      - 'gradle.properties'
+      - 'android/**'
       - '.github/workflows/build-apk.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'app/**'
-      - '*.gradle.kts'
-      - '*.gradle'
-      - 'gradle/**'
+      - 'android/**'
   workflow_dispatch:
 
 jobs:
@@ -39,7 +32,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x android/gradlew
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -47,12 +40,13 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon --stacktrace
+        working-directory: android
         env:
           ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
 
@@ -60,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: auriga-debug-${{ github.run_number }}
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 14
 
       - name: Upload build logs on failure
@@ -69,6 +63,6 @@ jobs:
         with:
           name: build-logs-${{ github.run_number }}
           path: |
-            app/build/reports/
-            build/reports/
+            android/app/build/reports/
+            android/build/reports/
           retention-days: 7

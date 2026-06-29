@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">የእርስዎ ድጋፍ ሰጪ የእይታ ተባባሪ</string>
+    <string name="permission_camera_rationale">Auriga በዙሪያዎ ያለውን ለማየት እና ስለ አደጋዎች ለማስጠንቀቅ የካሜራ ፈቃድ ይፈልጋል።</string>
+    <string name="status_starting">Auriga እየጀመረ ነው…</string>
+    <string name="status_running">Auriga እየተከታተለ ነው።</string>
+    <string name="status_model_loading">በመሣሪያ ላይ ያለው እገዛ እየተጫነ ነው…</string>
+    <string name="status_model_unavailable">የድምፅ እገዛ አሁን አይገኝም። ዋናው አሰሳ አሁንም ይሰራል።</string>
+</resources>

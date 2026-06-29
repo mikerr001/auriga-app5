@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Auriga</string>
+    <string name="tagline">Seu copiloto de visão assistencial</string>
+    <string name="permission_camera_rationale">O Auriga precisa de acesso à câmera para ver o mundo ao seu redor e avisá-lo sobre perigos.</string>
+    <string name="status_starting">Iniciando o Auriga…</string>
+    <string name="status_running">O Auriga está observando.</string>
+    <string name="status_model_loading">Carregando assistente no dispositivo…</string>
+    <string name="status_model_unavailable">O assistente de voz não está disponível agora. A navegação principal continua ativa.</string>
+</resources>
