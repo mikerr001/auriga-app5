@@ -18,19 +18,3 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
-
-<<<<<<< Updated upstream
-[nix]
-channel = "stable-25_05"
-=======
-[[workflows.workflow]]
-name = "Build APK"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "bash setup-android-sdk.sh && ANDROID_HOME=\"$HOME/.android-sdk\" ANDROID_SDK_ROOT=\"$HOME/.android-sdk\" ./gradlew assembleDebug --no-daemon 2>&1"
->>>>>>> Stashed changes
