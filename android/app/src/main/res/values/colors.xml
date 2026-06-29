@@ -1,10 +1,27 @@
 <resources>
-    <color name="auriga_background">#0B0E14</color>
-    <color name="auriga_surface">#161B26</color>
-    <color name="auriga_accent">#4FD1C5</color>
-    <color name="auriga_danger">#E5484D</color>
-    <color name="auriga_caution">#F5A623</color>
-    <color name="auriga_safe">#4FD17C</color>
-    <color name="auriga_text_primary">#F5F7FA</color>
-    <color name="auriga_text_secondary">#A0AAB8</color>
+    <!-- Dragon Palette — Chinese serpent dragon theme -->
+    <!-- Deep ink black, the void the dragon emerges from -->
+    <color name="auriga_background">#06080C</color>
+    <!-- Dark scales surface -->
+    <color name="auriga_surface">#0F1219</color>
+    <!-- Dragon gold — primary accent -->
+    <color name="auriga_accent">#C9A84C</color>
+    <!-- Dragon gold bright -->
+    <color name="auriga_accent_bright">#E8C56A</color>
+    <!-- Crimson danger — the dragon's breath -->
+    <color name="auriga_danger">#CC2020</color>
+    <!-- Caution ember -->
+    <color name="auriga_caution">#D4781A</color>
+    <!-- Jade safe -->
+    <color name="auriga_safe">#2A8C5A</color>
+    <!-- Parchment white text -->
+    <color name="auriga_text_primary">#F5EFE0</color>
+    <!-- Faded silk secondary text -->
+    <color name="auriga_text_secondary">#A89880</color>
+    <!-- Deep crimson overlay -->
+    <color name="auriga_overlay">#88080808</color>
+    <!-- Gold border -->
+    <color name="auriga_border">#6B5A2A</color>
+    <!-- Dragon red -->
+    <color name="auriga_red">#8B1A1A</color>
 </resources>

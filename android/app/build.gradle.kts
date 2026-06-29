@@ -70,6 +70,9 @@ android {
 
     kotlinOptions {
         jvmTarget = "17"
+        // litertlm:latest.release (0.13.1) was compiled with Kotlin 2.3 metadata;
+        // this flag allows our 2.1 compiler to read it without a fatal version error.
+        freeCompilerArgs += "-Xskip-metadata-version-check"
     }
 
     packaging {

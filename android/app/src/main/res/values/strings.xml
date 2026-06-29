@@ -1,10 +1,12 @@
 <resources>
-    <string name="app_name">Auriga</string>
-    <string name="tagline">Your assistive vision co-pilot</string>
-    <string name="permission_camera_rationale">Auriga needs camera access to see the world around you and warn you of hazards.</string>
-    <string name="status_starting">Starting Auriga…</string>
-    <string name="status_running">Auriga is watching.</string>
-    <string name="status_model_loading">Loading on-device assistant…</string>
-    <string name="status_model_unavailable">Voice assistant unavailable right now. Core navigation still active.</string>
-    <string name="status_model_low_ram">On-device voice assistant isn\'t supported on this phone\'s memory. Core navigation still works fully, and online voice assistant is available when connected.</string>
+    <string name="app_name">AURIGA</string>
+    <string name="tagline">YOUR VISION. THE DRAGON WATCHES.</string>
+    <string name="permission_camera_rationale">Auriga needs your camera to see the world around you and warn you of hazards.</string>
+    <string name="status_starting">Awakening the dragon…</string>
+    <string name="status_running">The dragon watches.</string>
+    <string name="status_model_loading">Summoning the mind…</string>
+    <string name="status_model_unavailable">Voice mind resting. Navigation guard still active.</string>
+    <string name="status_model_low_ram">On-device mind unavailable on this device. Core hazard watch fully active. Online mind available when connected.</string>
+    <string name="btn_ask_auriga">ASK AURIGA</string>
+    <string name="btn_ask_auriga_desc">Hold to speak to Auriga</string>
 </resources>
