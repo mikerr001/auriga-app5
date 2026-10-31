@@ -1,0 +1,36 @@
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Fraunces:opsz,wght@9..144,560;9..144,700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", "Atkinson Hyperlegible", serif;
+  --color-bg: #f6f0e4;
+  --color-surface: #fffaf3;
+  --color-surface-2: #efe4d2;
+  --color-fg: #1c140e;
+  --color-muted: #6e5b48;
+  --color-cyan: #d84a12;
+  --color-cyan-dim: #f8d8c8;
+  --color-line: #e0d2ba;
+  --color-alert: #9d1c2e;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    background: var(--color-bg);
+    color: var(--color-fg);
+  }
+
+  input,
+  select {
+    color: var(--color-fg);
+  }
+}
